@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Medicine Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        /* Time Selection Page */
+        .time-selection {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .time-btn {
+            display: block;
+            width: 100%;
+            padding: 25px;
+            margin: 15px 0;
+            border: none;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .time-btn:hover::before {
+            left: 100%;
+        }
+
+        .morning-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .noon-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .night-btn {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .time-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .time-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Medicine List Page */
+        .medicine-page {
+            display: none;
+            padding: 20px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 15px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            flex: 1;
+        }
+
+        .date-display {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .medicine-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            border-left: 5px solid #667eea;
+        }
+
+        .medicine-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .medicine-card.taken {
+            opacity: 0.6;
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .checkbox-container {
+            margin-right: 15px;
+        }
+
+        .custom-checkbox {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .custom-checkbox:hover {
+            transform: scale(1.1);
+        }
+
+        .custom-checkbox.checked {
+            background: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .custom-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .medicine-info {
+            flex: 1;
+        }
+
+        .medicine-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .medicine-timing {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .timing-badge {
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        /* Reset Button */
+        .reset-section {
+            text-align: center;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .reset-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .reset-btn:hover {
+            background: #ee5a5a;
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .medicine-card {
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .active {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🩺 Daily Medicine Tracker</h1>
+            <p>আপনার প্রেসক্রিপশন অনুযায়ী ওষুধ ব্যবস্থাপনা</p>
+        </div>
+
+        <!-- Time Selection Page -->
+        <div id="timeSelection" class="time-selection">
+            <h2 style="margin-bottom: 30px; color: #333;">কোন সময়ের ওষুধ দেখতে চান?</h2>
+            
+            <button class="time-btn morning-btn" onclick="showMedicines('morning')">
+                <span class="time-icon">🌅</span>
+                সকাল (Morning)
+                <br>
+                <small style="font-size: 14px; opacity: 0.9;">ভোর ৬টা - দুপুর ১২টা</small>
+            </button>
+
+            <button class="time-btn noon-btn" onclick="showMedicines('noon')">
+                <span class="time-icon">☀️</span>
+                দুপুর (Noon)
+                <br>
+                <small style="font-size: 14px; opacity: 0.9;">দুপুর ১২টা - বিকেল ৫টা</small>
+            </button>
+
+            <button class="time-btn night-btn" onclick="showMedicines('night')">
+                <span class="time-icon">🌙</span>
+                রাত (Night)
+                <br>
+                <small style="font-size: 14px; opacity: 0.9;">বিকেল ৫টা - রাত ১০টা</small>
+            </button>
+        </div>
+
+        <!-- Morning Page -->
+        <div id="morningPage" class="medicine-page">
+            <div class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h2 class="page-title">🌅 সকালের ওষুধ</h2>
+            </div>
+            <div class="date-display" id="morningDate"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="morningProgress" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="morningProgressText">0 of 0 taken</div>
+            <div id="morningList"></div>
+        </div>
+
+        <!-- Noon Page -->
+        <div id="noonPage" class="medicine-page">
+            <div class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h2 class="page-title">☀️ দুপুরের ওষুধ</h2>
+            </div>
+            <div class="date-display" id="noonDate"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="noonProgress" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="noonProgressText">0 of 0 taken</div>
+            <div id="noonList"></div>
+        </div>
+
+        <!-- Night Page -->
+        <div id="nightPage" class="medicine-page">
+            <div class="page-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h2 class="page-title">🌙 রাতের ওষুধ</h2>
+            </div>
+            <div class="date-display" id="nightDate"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="nightProgress" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="nightProgressText">0 of 0 taken</div>
+            <div id="nightList"></div>
+        </div>
+
+        <!-- Reset Section -->
+        <div class="reset-section">
+            <button class="reset-btn" onclick="resetAll()">🔄 Reset All (নতুন দিন শুরু)</button>
+            <p style="margin-top: 10px; font-size: 12px; color: #666;">প্রতিদিন সকালে Reset করুন</p>
+        </div>
+    </div>
+
+    <script>
+        // Medicine Data from Prescription
+        const medicines = [
+            {
+                id: 1,
+                name: "Ticagrelor",
+                fullName: "Ticagrelor (Ticolog 90mg Tab)",
+                strength: "90mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "take after food",
+                mealRelation: "খাবারের পর"
+            },
+            {
+                id: 2,
+                name: "Aspirin",
+                fullName: "Aspirin (Cava 75mg)",
+                strength: "75mg",
+                frequency: "0+1+0", // Noon
+                timing: "take after food",
+                mealRelation: "খাবারের পর"
+            },
+            {
+                id: 3,
+                name: "Carvedilol",
+                fullName: "Carvedilol (Cardex 3.125mg Tab)",
+                strength: "3.125mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "take after food",
+                mealRelation: "খাবারের পর"
+            },
+            {
+                id: 4,
+                name: "Ivabradine",
+                fullName: "Ivabradine (Ivanor 5mg Tab)",
+                strength: "5mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "take before food",
+                mealRelation: "খাবারের আগে"
+            },
+            {
+                id: 5,
+                name: "Atorvastatin",
+                fullName: "Atorvastatin (Anzitor 40mg Tab)",
+                strength: "40mg",
+                frequency: "0+0+1", // Night only
+                timing: "take before food",
+                mealRelation: "খাবারের আগে"
+            },
+            {
+                id: 6,
+                name: "Nitroglycerin",
+                fullName: "Nitroglycerin (Angivent-MR 2.6mg)",
+                strength: "2.6mg",
+                frequency: "1+1+0", // Morning + Noon
+                timing: "8 am, 2 pm",
+                mealRelation: "নির্দিষ্ট সময়ে"
+            },
+            {
+                id: 7,
+                name: "Trimetazidine",
+                fullName: "Trimetazidine (Angivent-MR 35mg)",
+                strength: "35mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "take after food",
+                mealRelation: "খাবারের পর"
+            },
+            {
+                id: 8,
+                name: "Pantoprazole",
+                fullName: "Pantoprazole (Trupan 20mg)",
+                strength: "20mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "1/2 an hour before meal",
+                mealRelation: "খাবারের ১/২ ঘন্টা আগে"
+            },
+            {
+                id: 9,
+                name: "Insulin Human R",
+                fullName: "Insulin Human R 100 IU (Ansulin R 100IU 10ml)",
+                strength: "100IU",
+                frequency: "12+12+8(±2)", // Morning + Noon + Night
+                timing: "before meal",
+                mealRelation: "খাবারের আগে",
+                quantity: "12 unit morning, 12 unit noon, 8 unit night"
+            },
+            {
+                id: 10,
+                name: "Insulin Glargine",
+                fullName: "Insulin Glargine 100 IU (Lantus 100Unit/ml 3ml Cartridge)",
+                strength: "100 IU",
+                frequency: "0+0+10(±2)", // Night only
+                timing: "At bedtime",
+                mealRelation: "ঘুমানোর সময়",
+                quantity: "10 unit"
+            },
+            {
+                id: 11,
+                name: "Sodium Bicarbonate",
+                fullName: "Sodium Bicarbonate (Sodibar 600mg Tab)",
+                strength: "600mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "take before food",
+                mealRelation: "খাবারের আগে"
+            },
+            {
+                id: 12,
+                name: "Acetylcysteine",
+                fullName: "Acetylcysteine (Tylace 10s Effervescent Tab)",
+                strength: "600mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "take after food",
+                mealRelation: "খাবারের পর",
+                instruction: "mix with ½ glass of water"
+            },
+            {
+                id: 13,
+                name: "Ketorolac",
+                fullName: "Ketorolac (Torax 10mg Tab)",
+                strength: "10mg",
+                frequency: "0+1+0", // Noon only
+                timing: "take after food",
+                mealRelation: "খাবারের পর"
+            },
+            {
+                id: 14,
+                name: "Faropenem",
+                fullName: "Faropenem (Neopem 200mg Tab)",
+                strength: "200mg",
+                frequency: "1+0+1", // Morning + Night
+                timing: "12 hourly",
+                mealRelation: "প্রতি ১২ ঘন্টায়"
+            },
+            {
+                id: 15,
+                name: "Diclofenac Sodium",
+                fullName: "Diclofenac Sodium (Clofenac Gel 20gm)",
+                strength: "20gm",
+                frequency: "local application",
+                timing: "apply locally",
+                mealRelation: "স্থানীয় প্রয়োগ",
+                route: "Topical"
+            },
+            {
+                id: 16,
+                name: "Clonazepam",
+                fullName: "Clonazepam (Epitra 0.5mg)",
+                strength: "0.5mg",
+                frequency: "0+0+1", // Night only
+                timing: "At 10 pm",
+                mealRelation: "রাত ১০টায়"
+            },
+            {
+                id: 17,
+                name: "Sodium Picosulfate",
+                fullName: "Sodium Picosulfate (Sopilax 100ml Oral Solution)",
+                strength: "2.5mg/ml",
+                frequency: "2 TSF", // Night only
+                timing: "Take at bed time",
+                mealRelation: "ঘুমানোর সময়",
+                instruction: "If constipation, Stop if loose motion"
+            }
+        ];
+
+        // Parse frequency to determine which time of day
+        function parseFrequency(freq) {
+            const times = { morning: false, noon: false, night: false };
+            
+            if (freq.includes('local') || freq.includes('application')) {
+                return times; // Topical, no specific time
+            }
+            
+            // Remove text like (±2) and extract numbers
+            const cleanFreq = freq.replace(/\(.*?\)/g, '').trim();
+            const parts = cleanFreq.split('+').map(p => parseInt(p.trim()) || 0);
+            
+            if (parts.length >= 1 && parts[0] > 0) times.morning = true;
+            if (parts.length >= 2 && parts[1] > 0) times.noon = true;
+            if (parts.length >= 3 && parts[2] > 0) times.night = true;
+            
+            // Special cases from prescription
+            if (freq === "2 TSF") times.night = true; // Sodium Picosulfate
+            
+            return times;
+        }
+
+        // Get medicines for specific time
+        function getMedicinesForTime(time) {
+            return medicines.filter(med => {
+                const times = parseFrequency(med.frequency);
+                return times[time];
+            });
+        }
+
+        // Load taken status from localStorage
+        function loadTakenStatus() {
+            const today = new Date().toDateString();
+            const saved = localStorage.getItem('medicineTracker_' + today);
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        // Save taken status
+        function saveTakenStatus(status) {
+            const today = new Date().toDateString();
+            localStorage.setItem('medicineTracker_' + today, JSON.stringify(status));
+        }
+
+        // Toggle medicine taken status
+        function toggleMedicine(medId, time) {
+            const status = loadTakenStatus();
+            const key = `${time}_${medId}`;
+            status[key] = !status[key];
+            saveTakenStatus(status);
+            renderMedicines(time);
+        }
+
+        // Render medicine list
+        function renderMedicines(time) {
+            const container = document.getElementById(time + 'List');
+            const meds = getMedicinesForTime(time);
+            const status = loadTakenStatus();
+            
+            if (meds.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <h3>এই সময়ে কোন ওষুধ নেই</h3>
+                        <p>No medicines scheduled for this time</p>
+                    </div>
+                `;
+                updateProgress(time, 0, 0);
+                return;
+            }
+
+            let html = '';
+            let takenCount = 0;
+
+            meds.forEach((med, index) => {
+                const key = `${time}_${med.id}`;
+                const isTaken = status[key] || false;
+                if (isTaken) takenCount++;
+
+                // Determine timing text
+                let timingText = med.mealRelation;
+                if (med.quantity) {
+                    timingText += ` (${med.quantity})`;
+                }
+
+                html += `
+                    <div class="medicine-card ${isTaken ? 'taken' : ''}" style="animation-delay: ${index * 0.1}s">
+                        <div class="checkbox-container">
+                            <div class="custom-checkbox ${isTaken ? 'checked' : ''}" 
+                                 onclick="toggleMedicine(${med.id}, '${time}')">
+                            </div>
+                        </div>
+                        <div class="medicine-info">
+                            <div class="medicine-name">${med.name} ${med.strength}</div>
+                            <div class="medicine-timing">
+                                <span class="timing-badge">${timingText}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            updateProgress(time, takenCount, meds.length);
+        }
+
+        // Update progress bar
+        function updateProgress(time, taken, total) {
+            const percentage = total > 0 ? (taken / total) * 100 : 0;
+            document.getElementById(time + 'Progress').style.width = percentage + '%';
+            document.getElementById(time + 'ProgressText').textContent = `${taken} of ${total} taken (${Math.round(percentage)}%)`;
+        }
+
+        // Show medicines page
+        function showMedicines(time) {
+            document.getElementById('timeSelection').classList.add('hidden');
+            document.getElementById(time + 'Page').classList.add('active');
+            
+            // Set date
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('bn-BD', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById(time + 'Date').textContent = dateStr;
+            
+            renderMedicines(time);
+        }
+
+        // Go back to time selection
+        function goBack() {
+            document.querySelectorAll('.medicine-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById('timeSelection').classList.remove('hidden');
+        }
+
+        // Reset all for new day
+        function resetAll() {
+            if (confirm('আজকের সব তথ্য মুছে ফেলতে চান? (Clear all today\'s data?)')) {
+                const today = new Date().toDateString();
+                localStorage.removeItem('medicineTracker_' + today);
+                
+                // Refresh current view if on a medicine page
+                const activePage = document.querySelector('.medicine-page.active');
+                if (activePage) {
+                    const time = activePage.id.replace('Page', '');
+                    renderMedicines(time);
+                }
+                
+                alert('✅ সব তথ্য রিসেট হয়েছে! (All data has been reset!)');
+            }
+        }
+
+        // Auto-reset check (if last visit was yesterday)
+        function checkAutoReset() {
+            const lastVisit = localStorage.getItem('lastVisit');
+            const today = new Date().toDateString();
+            
+            if (lastVisit !== today) {
+                // New day, clear old data
+                if (lastVisit) {
+                    localStorage.removeItem('medicineTracker_' + lastVisit);
+                }
+                localStorage.setItem('lastVisit', today);
+            }
+        }
+
+        // Initialize
+        window.onload = function() {
+            checkAutoReset();
+        };
+    </script>
+</body>
+</html>
+
