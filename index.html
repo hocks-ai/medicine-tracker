@@ -401,9 +401,9 @@
         const medicines = [
             {
                 id: 1,
-                name: "Ticalog",
-                fullName: "Ticagrelor (Ticolog 90mg Tab)",
-                strength: "90mg",
+                name: "Prasurel",
+                fullName: "Prasugrel (Prasurel 10mg Tab)",
+                strength: "10mg",
                 frequency: "1+0+1", // Morning + Night
                 timing: "take after food",
                 mealRelation: "খাবারের পর"
@@ -411,7 +411,7 @@
             {
                 id: 2,
                 name: "Carva",
-                fullName: "Aspirin (Cava 75mg)",
+                fullName: "Aspirin (Carva 75mg)",
                 strength: "75mg",
                 frequency: "0+1+0", // Noon
                 timing: "take after food",
@@ -419,20 +419,20 @@
             },
             {
                 id: 3,
-                name: "Cardex",
-                fullName: "Carvedilol (Cardex 3.125mg Tab)",
-                strength: "3.125mg",
-                frequency: "1+0+1", // Morning + Night
-                timing: "take after food",
-                mealRelation: "খাবারের পর"
+                name: "Glympa",
+                fullName: "Glympa (glympa 10/5mg Tab)",
+                strength: "10/5mg",
+                frequency: "1+0+0", // Morning 
+                timing: "take brfore food",
+                mealRelation: "খাবারের purbe"
             },
             {
                 id: 4,
-                name: "Ivanor",
-                fullName: "Ivabradine (Ivanor 5mg Tab)",
-                strength: "5mg",
-                frequency: "1+0+1", // Morning + Night
-                timing: "take before food",
+                name: "Meget",
+                fullName: "Megestrol Acetate (Meget 160mg Tab)",
+                strength: "160mg",
+                frequency: "1+0+0", // Morning 
+                timing: "No time specified",
                 mealRelation: "খাবারের আগে"
             },
             {
@@ -446,24 +446,6 @@
             },
             {
                 id: 6,
-                name: "Anril",
-                fullName: "Nitroglycerin (Angivent-MR 2.6mg)",
-                strength: "2.6mg",
-                frequency: "1+1+0", // Morning + Noon
-                timing: "8 am, 2 pm",
-                mealRelation: "নির্দিষ্ট সময়ে"
-            },
-            {
-                id: 7,
-                name: "Angivent-MR",
-                fullName: "Trimetazidine (Angivent-MR 35mg)",
-                strength: "35mg",
-                frequency: "1+0+1", // Morning + Night
-                timing: "take after food",
-                mealRelation: "খাবারের পর"
-            },
-            {
-                id: 8,
                 name: "Trupan",
                 fullName: "Pantoprazole (Trupan 20mg)",
                 strength: "20mg",
@@ -472,90 +454,33 @@
                 mealRelation: "খাবারের ১/২ ঘন্টা আগে"
             },
             {
-                id: 9,
-                name: "Ansulin R Insulin",
-                fullName: "Insulin Human R 100 IU (Ansulin R 100IU 10ml)",
+                id: 7,
+                name: "Actrapid Insulin",
+                fullName: "Insulin Actrapid 100",
                 strength: "100IU",
-                frequency: "12+12+8(±2)", // Morning + Noon + Night
-                timing: "before meal",
-                mealRelation: "খাবারের আগে",
-                quantity: "12 unit morning, 12 unit noon, 8 unit night"
+                frequency: "14+12+12", // Morning + Noon + Night
+                timing: "30 min before meal",
+                mealRelation: "খাবারের 30 min আগে",
+                quantity: "14 unit morning, 12 unit noon, 12 unit night"
             },
             {
-                id: 10,
+                id: 8,
                 name: "Lantus Insulin",
                 fullName: "Insulin Glargine 100 IU (Lantus 100Unit/ml 3ml Cartridge)",
                 strength: "100 IU",
-                frequency: "0+0+10(±2)", // Night only
+                frequency: "0+0+14", // Night only
                 timing: "At bedtime",
                 mealRelation: "ঘুমানোর সময়",
                 quantity: "10 unit"
             },
             {
-                id: 11,
+                id: 9,
                 name: "Sodibar",
                 fullName: "Sodium Bicarbonate (Sodibar 600mg Tab)",
                 strength: "600mg",
                 frequency: "1+0+1", // Morning + Night
                 timing: "take before food",
                 mealRelation: "খাবারের আগে"
-            },
-            {
-                id: 12,
-                name: "Tylace",
-                fullName: "Acetylcysteine (Tylace 10s Effervescent Tab)",
-                strength: "600mg",
-                frequency: "1+0+1", // Morning + Night
-                timing: "take after food",
-                mealRelation: "খাবারের পর",
-                instruction: "mix with ½ glass of water"
-            },
-            {
-                id: 13,
-                name: "Torax",
-                fullName: "Ketorolac (Torax 10mg Tab)",
-                strength: "10mg",
-                frequency: "0+1+0", // Noon only
-                timing: "take after food",
-                mealRelation: "খাবারের পর"
-            },
-            {
-                id: 14,
-                name: "Neopem",
-                fullName: "Faropenem (Neopem 200mg Tab)",
-                strength: "200mg",
-                frequency: "1+0+1", // Morning + Night
-                timing: "12 hourly",
-                mealRelation: "প্রতি ১২ ঘন্টায়"
-            },
-            {
-                id: 15,
-                name: "Clofenac Gel",
-                fullName: "Diclofenac Sodium (Clofenac Gel 20gm)",
-                strength: "20gm",
-                frequency: "1+1+1", // Morning + Noon + Night
-                timing: "apply locally",
-                mealRelation: "স্থানীয় প্রয়োগ",
-                route: "Topical"
-            },
-            {
-                id: 16,
-                name: "Epitra",
-                fullName: "Clonazepam (Epitra 0.5mg)",
-                strength: "0.5mg",
-                frequency: "0+0+1", // Night only
-                timing: "At 10 pm",
-                mealRelation: "রাত ১০টায়"
-            },
-            {
-                id: 17,
-                name: "Sopilax",
-                fullName: "Sodium Picosulfate (Sopilax 100ml Oral Solution)",
-                strength: "2.5mg/ml",
-                frequency: "0+0+1", // Night 
-                timing: "Take at bed time",
-                mealRelation: "ঘুমানোর সময়",
-                instruction: "If constipation, Stop if loose motion"
             }
         ];
 
